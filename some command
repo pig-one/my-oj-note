@@ -36,12 +36,6 @@ docker exec [-d][-i][-t] 容器名［命令］
 stop
 kill
 
-
-
-
-
-
-
 容器中不熟静态网站,设置容器端口映射
 -p,--publish=[]
 
