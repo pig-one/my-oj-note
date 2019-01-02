@@ -1,0 +1,10 @@
+#tensorflow
+tensorflow主要依赖包：Protocol Buffer（组织数据，并且是gRPC的基础）, Bazel（自动化构建工具）
+
+Protocol Buffer:谷歌开发处理结构化数据的工具，类似的工具还有XML和JSON.但是还是有差别：
+    １．protocol Buffer 需要先定义数据格式schema才能还原序列化之后的数据．
+    ２．protocol Buffer 序列化的数据比XML的数据小３－１０倍，解析时间快２０－１００倍
+    ３．数据一般存在.proto文件
+    
+    
+Bazel的一个基本概念是workspace项目空间，一个workspace只有一个应用，例如tensorflow.Bazel通过BUILD来找到编译目标． 
