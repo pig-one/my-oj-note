@@ -36,12 +36,18 @@ docker exec [-d][-i][-t] 容器名［命令］
 stop
 kill
 
-
-
-
-
-
-
 容器中不熟静态网站,设置容器端口映射
 -p,--publish=[]
+
+19.1.2
+使用docker安装tensorflow
+如果出现端口被占用，可以netstat -nap | grep 端口号
+然后删除pid即可
+容器未启动,那么就docker start ...
+进入容器：sudo docker exec -i -t 859977f01c08 /bin/bash
+出错ImportError: cannot import name pywrap_tensorflow　　　
+解决：check versions of everything
+pip freeze | grep -e six -e mock easy_install --version
+Update everything
+wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python pip install mock --upgrade pip install six --upgrade
 
