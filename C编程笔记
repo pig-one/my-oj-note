@@ -116,6 +116,19 @@ c++11加入了多线程开发接口
 
 
 
+死锁
+1.产生前提条件，至少两个锁头（互斥量）。
+2.eg：两个线程A、B，线程A先锁金锁，lock()金锁，然后去lock银锁。。。
+出现了上下文切换。此时线程B粉墨登场，先锁银锁，然后锁金锁。-----此时出现死锁。
+std::lock()函数模板：一次锁住两个或以上的互斥量。可以避免这种因为锁的顺序问题导致的死锁的风险问题。要么两个互斥量都锁住，要么两个互斥量都没锁住。如果只锁一个，另外一个没锁成功，则立即解锁
+std::lock(my_mutex1,my_mutex2),解决unlock用std::lock_guard<std::mutex> sbguard1(my_mutex1, std::adopt_lock)----------adopt_lock结构体
+老师建议一个一个锁。
+
+用lock和unlock演示：
+1.先创建两个互斥量
+2.my_mutex1.lock()
+my_mutex2.lock()
+
 
 
 
