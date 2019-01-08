@@ -51,3 +51,10 @@ pip freeze | grep -e six -e mock easy_install --version
 Update everything
 wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python pip install mock --upgrade pip install six --upgrade
 
+
+
+ｄｏｃｋｅｒ远程登录（网页），在服务器端打开ｊｕｐｙｔｅｒ　ｎｏｔｅｂｏｏｋ，并设置密码
+１．ａｐｔ－ｇｅｔ　ｕｐｄａｔｅ　失败：cat /etc/resolv.conf查看ｄｏｃｋｅｒ中的DNS配置.查看虚拟机中的DNS.并将虚拟机中的DNS复制到ｄｏｃｋｅｒ中：echo "nameserver 150.236.34.180" | tee /etc/resolv.conf > /dev/null
+２．如果出现错误提示：E: Could not get lock /var/lib/dpkg/lock - open (11 Resource temporarily unavailable) 解决方法：sudo rm /var/lib/apt/lists/lock
+
+  
