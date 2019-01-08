@@ -1,4 +1,5 @@
-c++多线程，创建多个线程
+c++多线程
+创建多个线程
 #include<map>
 #include<string>
 #include<thread>
@@ -86,4 +87,37 @@ int main(){
 }
 程序终止的原因，未加锁。共享数据只要不被破坏，程序就不汇报异常
 代码化解决问题，引入c++解决多线程保护共享数据问题的第一个概念“互斥量”
+互斥量（mutex）基本概念，保护共享数据，操作时用代码把共享数据锁住，操作数据，解锁。其他操作共享数据的线程必须等待解锁，锁定住，操作，解锁。
+有lock忘记unlock很难排查！！！为了防止忘记unlock，引入了std::lock_guard的类模板：你忘了unlock（），我替你unlock（）；类似于智能指针（unique_ptr<>）:你忘记释放内存我来帮你释放内存。
+互斥量使用要小心！正确保护“数据”！
+
+
+互斥量怎么写：
+1. #include<mutex>
+2. private:
+		std::mutex my_mutex;//创建一个互斥量
+3. //先lock(),操作共享数据,unlock();lock和unlock成对使用，每调用一次lock必须调用unlock（所有分支都要unlock ）
+my_mutex.lock();
+push_back(i);
+my_mutex.unlock();
+4. 为了操作方面，把需要加锁的代码提取成函数
+bool outMsgLULProc(int &command){
+	
+}
+
+std::lock_guard类模板，直接取代lock和unlock：也就是说，用了lock_guard后再也不能使用lock和unlock
+代码实现：
+在4中，
+std::lock_guard<std::mutex> sbguard(mutex)//lock_guard构造函数里执行了mutex::lock(),析构函数里执行了mutex::unlock().如果想提前结束，那么｛｝限定lock_guard作用域。
+
+
+c++11加入了多线程开发接口
+
+
+
+
+
+
+
+
 
