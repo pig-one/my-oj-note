@@ -56,5 +56,7 @@ wget https://bootstrap.pypa.io/ez_setup.py -O - | sudo python pip install mock -
 ｄｏｃｋｅｒ远程登录（网页），在服务器端打开ｊｕｐｙｔｅｒ　ｎｏｔｅｂｏｏｋ，并设置密码
 １．ａｐｔ－ｇｅｔ　ｕｐｄａｔｅ　失败：cat /etc/resolv.conf查看ｄｏｃｋｅｒ中的DNS配置.查看虚拟机中的DNS.并将虚拟机中的DNS复制到ｄｏｃｋｅｒ中：echo "nameserver 150.236.34.180" | tee /etc/resolv.conf > /dev/null
 ２．如果出现错误提示：E: Could not get lock /var/lib/dpkg/lock - open (11 Resource temporarily unavailable) 解决方法：sudo rm /var/lib/apt/lists/lock
+3.apt-get update 速度很慢换了个源，稍微快一点．命令： mv /etc/apt/sources.list /etc/apt/sources.list.bak && \ echo 'deb http://mirrors.163.com/debian/ jessie main non-free contrib' > /etc/apt/sources.list && \ echo 'deb http://mirrors.163.com/debian/ jessie-updates main non-free contrib' >> /etc/apt/sources.list && \ echo 'deb http://mirrors.163.com/debian-security/ jessie/updates main non-free contrib' >> /etc/apt/sources.list
 
-  
+今天在docker装好vim.
+ 主线任务： https://blog.csdn.net/weixin_40008349/article/details/81135847
