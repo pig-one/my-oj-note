@@ -1,4 +1,18 @@
 c++多线程
+2019.1.10
+Thread
+join()：回合子线程和主线程，防止主线程结束，子线程异常
+detach():分离线程，更推荐用join(),一旦detach后，子线程变为后台运行（守护线程），不能再join。
+jointable():判断是否可以成功使用join或detach，返回true（表示可以join或detach）或false（不可以join或detach）。
+其他创建线程的方法：
+1.用类，以及一个问题实例
+TA ta；
+Thread mytobj（ta）；
+mytobj.join();
+
+
+
+
 创建多个线程
 #include<map>
 #include<string>
@@ -129,8 +143,132 @@ std::lock(my_mutex1,my_mutex2),解决unlock用std::lock_guard<std::mutex> sbguar
 2.my_mutex1.lock()
 my_mutex2.lock()
 
+代码实现:
+// project3.cpp : 定义控制台应用程序的入口点。
+//
+#include "stdafx.h"
+#include <iostream>
+#include <map>
+#include <string>
+#include <thread>
+#include <list>
+#include <mutex>
+#include <vector>
+
+using namespace std;
+//县城入口函数
+//vector<int> g_v = { 1, 2, 3 };//共享数据
+//void myprint(int inum){
+//	//cout << "mypeint县城开始执行，编号=" << inum << endl;
+//	//....
+//	//cout << "jieshu" << inum << endl;
+//
+//	cout << "id为" << std::this_thread::get_id() << "的线程，打印g_v值" << g_v[0] << g_v[1] << g_v[2] << endl;
+//	return;
+//}
+//
+//int main(){
+//	//创建和等待多个线程
+//	vector <thread>mythreads;
+//	//创建10个县城，入口统一myprint
+//	for (int i = 0; i < 10; i++){
+//		mythreads.push_back(thread(myprint, i));//创建开始执行的县城，并且开始执行
+//
+//	}
+//	for (auto iter = mythreads.begin(); iter != mythreads.end(); ++iter){
+//		iter->join();
+//
+//	}
+//	cout << "i love you" << endl;
+//	return 0;
+//}
+
+//用成员函数作为线程函数方法来写线程
+class A{
+public:
+	//把收到的玩家命令插入到队列的线程
+	void inMsgRecvQueue(){
+		for (int i = 0; i < 100000; ++i){
+			cout << "inMsgRecvQueue()执行，插入一个元素" << i << endl;
+			{
+				/*my_mutex1.lock();
+				my_mutex2.lock();*/
+				//std::lock_guard<mutex> sbguard(my_mutex);
+				std::lock(my_mutex1, my_mutex2);
+				std::lock_guard<std::mutex> sbguard1(my_mutex1, std::adopt_lock);
+				std::lock_guard<std::mutex> sbguard2(my_mutex2, std::adopt_lock);
+				msgRecvQueue.push_back(i);//假设数字i就是玩家发送过来的命令。
+				//my_mutex2.unlock();
+				//my_mutex1.unlock();
+				
+			}
+		}
+	}
+	bool outMsgLULProc(int &command){
+		my_mutex1.lock();
+		//....
+		//std::lock_guard<mutex> sbguard(my_mutex);
+		my_mutex2.lock();
+		if (!msgRecvQueue.empty()){
+			//消息不为空
+			int command = msgRecvQueue.front();//返回第一个元素，但不检查是否存在
+			msgRecvQueue.pop_front();//移除第一个元素，但不返回
+			//处理数据
+			my_mutex1.unlock();
+			my_mutex2.unlock();
+			return true;
+
+		}
+		else
+		{
+			my_mutex1.unlock();
+			my_mutex2.unlock();
+			return false;
+		}
+		
+	}
 
 
+	//把数据从消息队列中取出的线程
+	void outMsgRecvQueue(){
+		int command = 0;
+		for (int i = 0; i < 100000; ++i){
+			int result = outMsgLULProc(command);
+			if (result == true){
+				cout << "msgRecvQueue队列取出用户命令" << command << endl;
+			}
+			//if (!msgRecvQueue.empty()){
+			//	//消息不为空
+			//	int command = msgRecvQueue.front();//返回第一个元素，但不检查是否存在
+			//	msgRecvQueue.pop_front();//移除第一个元素，但不返回
+			//	//处理数据
+
+			//}
+			else
+			{
+				cout << "outMsgRecvQueue()执行，但目前消息队列为空" << i << endl;
+			}
+		}
+		cout << "end" << endl;
+	}
+private:
+	std::list<int> msgRecvQueue;//共享数据
+	std::mutex my_mutex1;
+	std::mutex my_mutex2;
+};
+int main(){
+	A myobja;
+	std::thread myOutMsgObj(&A::outMsgRecvQueue, &myobja);//第二个参数是  引用,才能保障线程中用的是同一个对象
+	std::thread myInMsgObj(&A::inMsgRecvQueue, &myobja);
+	myInMsgObj.join();
+	myOutMsgObj.join();
+	return 0;
+}
+
+
+
+unique_lock详解：
+unique_lock取代lock_guard
 
 
 
