@@ -1,0 +1,121 @@
+数组问题，移动0到数组后。
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int n=nums.size();
+        int zeronums = 0;
+        for(int i = 0;i<n; i++)
+        {
+            zeronums += (nums[i] == 0);
+        }
+        vector<int > ans;
+        for(int i = 0; i < n; i++){
+            if (nums[i]!= 0){ans.push_back(nums[i]);}
+        }
+        while(zeronums--){
+            ans.push_back(0);
+        }
+        for (int i=0;i<n;i++){
+            nums[i] = ans[i];
+        }
+    }
+};
+
+hash表问题
+happy number给定一个数字，判断每位平方相加，重复n次，判断能否十分最终的结果为1.
+class Solution {
+public:
+    int oncesumsquire(int n){
+        int sum = 0;
+        while(n)
+        {   
+            int cash = n%10; 
+            sum += cash * cash;
+            n /= 10;
+        }
+        return sum;
+    }
+    bool isHappy(int n) {
+        int slow=n;
+        int fast=n;
+        do
+        {
+            slow = oncesumsquire(slow);
+            fast = oncesumsquire(fast);
+            fast = oncesumsquire(fast);
+        }while(slow != fast);
+        if (slow == 1){
+            return true;}
+        else
+            return false;
+    }
+};
+
+
+链表问题：
+两个链表相加，给定两个链表,进位问题没看懂
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* current1 = l1;
+        ListNode* current2 = l2;
+        ListNode* res = NULL;
+        int n1 = 0;
+        int n2 = 0;
+        while(current1)
+        {
+            current1 = current1->next;
+            n1++;
+        }
+        while(current2)
+        {
+            current2 = current2->next;
+            n2++;
+        }
+        current1 = l1;current2 = l2;
+        while(n1>0&&n2>0)
+        {
+            int sum = 0;
+            if(n1>=n2){
+                sum += current1->val;
+                current1 = current1->next;
+                n1--;
+            }
+            if(n2>n1){
+                sum += current2->val;
+                current2 = current2->next;
+                n2--;
+            }
+            res = AddToFront(sum,res);
+        }
+        current1 = res; res = NULL;
+        int carry = 0;
+        while(current1){
+            current1->val += carry;
+            carry = current1->val/10;
+            //current1->value += carry;
+            res = AddToFront(current1->val%10,res);
+            current2 = current1;
+            current1 = current1->next;
+            delete current2;
+        }
+        if(carry == 1){
+            res = AddToFront(1,res);
+           
+        } return res;
+    }
+    ListNode* AddToFront(int val,ListNode* res){
+        ListNode* temp = new ListNode(val);
+        temp->next = res;
+        return temp;
+    }
+        
+};
