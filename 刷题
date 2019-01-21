@@ -52,7 +52,7 @@ public:
 };
 
 
-链表问题：
+链表问题：*****************************************************************
 两个链表相加，给定两个链表,进位问题没看懂
 /**
  * Definition for singly-linked list.
@@ -119,3 +119,68 @@ public:
     }
         
 };
+
+
+math问题：
+把一个数组中的数字经过m次增加，使得数组中每个数字都相等，每次增加的值总和不得超过数组长度减1.纯粹的数学问题。
+代码：
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        int n = nums.size();
+        int sum = 0;
+        int minNum = nums[0];
+        for(int i=0;i<n;i++)
+        {
+            sum += nums[i];
+            if (minNum > nums[i]){
+                minNum = nums[i];
+            }
+        }
+        return sum-minNum*n;
+    }
+};
+
+
+Two pointers，双指针问题************************
+三个数之和为零，返回二维数组
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> ans;
+        sort(nums.begin(),nums.end());
+        //vector<vector<int>> ans;
+        for(int i = 0 ;i < nums.size();i++){
+            int target = -nums[i];
+            int front = i+1;
+            int rear = nums.size() - 1;
+            //int sum = 0;
+
+            while(front < rear)
+            {
+                int sum = nums[front] + nums[rear];
+                if (sum < target){
+                    front++;
+                }
+                else if(sum > target){
+                    rear--;
+                }
+                else{
+                    vector <int> triple(3,0);
+                    triple[0] = nums[i];
+                    triple[1] = nums[front];
+                    triple[2] = nums[rear];
+                    ans.push_back(triple);
+                    while(front<rear && nums[front] == triple[1]) front++;
+                    while(front<rear && nums[rear] == triple[2]) rear--;
+                }
+            }
+            while(i+1<nums.size() && nums[i+1] == nums[i])
+                i++;
+        }
+        return ans;
+    }
+};
+
+String字符串问题，
+
