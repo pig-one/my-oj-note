@@ -184,3 +184,36 @@ public:
 
 String字符串问题，
 
+二分检索问题
+一行解决阶梯问题，其实本质上是数学问题。arranging coins
+1+2+3+...+x = n
+-> (1+x)x/2 = n
+-> x^2+x = 2n
+-> x^2+x+1/4 = 2n +1/4
+-> (x+1/2)^2 = 2n +1/4
+-> (x+0.5) = sqrt(2n+0.25)
+-> x = -0.5 + sqrt(2n+0.25)
+
+int arrangeCoins(int n) {
+return floor(-0.5+sqrt((double)2*n+0.25));
+}
+
+
+
+分治法（divide and conquer）
+beautiful arry(比较难想)
+题目描述：
+Saying that an array is beautiful,
+there is no i < k < j,
+such that A[k] * 2 = A[i] + A[j]
+题解：
+   vector<int> beautifulArray(int N) {
+        vector<int> res = {1};
+        while (res.size() < N) {
+            vector<int> tmp;
+            for (int i : res) if (i * 2 - 1 <= N) tmp.push_back(i * 2 - 1);
+            for (int i : res) if (i * 2 <= N) tmp.push_back(i * 2);
+            res = tmp;
+        }
+        return res;
+    }
