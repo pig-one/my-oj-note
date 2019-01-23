@@ -21,10 +21,29 @@
 1.新建repository，name  github.github.io
 2.在setting中github pages中选择你的网站的主题，并把已经租好的域名与之相关联。这时你已经可以通过域名或pages中生成的网址访问你的网站（只不过没什么关于你的内容，因为你还没写网站）
 3.自己写，或者去网上找模板，并把代码推到github。比较不错的模板网站有https://html5up.net/            https://ajz.fkw.com/
+4.
 
 
 
 
-实现单线上网，其实也可以把博客放到服务器上
+
+
+
+
+
+
+VPS配置：实现单线上网，也可以把博客放到服务器上
 1.通过vultr或搬瓦工租用国外服务器。
-2.用xhsell配置服务器。
+2.用xhsell配置服务器。注意租来的服务器，先在本地ping一下ip看是否被墙，墙的话换其他机房。
+服务器地址（IP）： 45.63.107.87 
+你的密码            ： 65281631com 
+你的端口            ： 1024 
+你的加密方式        ： aes-256-cfb 
+欢迎访问flyzy小站   ： https://www.flyzy2005.com 
+你的ss链接： ss://YWVzLTI1Ni1jZmI6NjUyODE2MzFjb21ANDUuNjMuMTA3Ljg3OjEwMjQ= 
+3.下载一键搭建ss脚本文件：git clone https://github.com/Flyzy2005/ss-fly
+运行搭建ss脚本代码：ss-fly/ss-fly.sh -i 你设置密码 1024（端口号）
+开启bbr加速：linux内核版本低于4.9，会自动重新安装，并要求重启。：ss-fly/ss-fly.sh -bbr
+开启bbr加速：ss-fly/ss-fly.sh -bbr
+4.windows客户点配置，在https://shadowsocks.org/en/download/clients.html下载outline.exe，把自己的ss连接复制下来，在outline就可以自己配置服务器了。
+
