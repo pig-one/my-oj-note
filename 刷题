@@ -217,3 +217,35 @@ such that A[k] * 2 = A[i] + A[j]
         }
         return res;
     }
+    
+    
+动态规划       Dynamic Programming
+ 2 keys keyboard
+ 质因数分解prime factorization
+ 思路：
+ 1.量化解空间，用c表示copy，p表示paste。则移动次序[cpp][cppp][cp].
+ 2.g1,g2,gn分别表示这些数组的长度
+ 3.‘A’的个数即为g1*g2*g3*...*gn个
+ 4.求最优：如果gi可分解，即可写为gi = p*q;那么就把这个数组拆分为两个数组（第一个数组有1个copy，p-1个paste。第二个数组有1个copy，q-1个paste）
+ 注意：这样分割步数最少，未分割前步数为pq，分割后步数为p+q。在p、q都大于等于2的时候，p+q <= pq 就等价于 1 <= (p-1)(q-1)
+class Solution {
+public:
+    int minSteps(int n) {
+        int stepNum = 0;
+        int d = 2;
+        while(n > 1){
+            while(n%d == 0){
+                stepNum += d;
+                n /= d;
+            }
+            d += 1;
+            
+        }
+        return stepNum;
+    }
+};
+
+
+
+
+回溯backtracking
