@@ -249,3 +249,72 @@ public:
 
 
 回溯backtracking
+
+
+
+
+
+
+
+
+二维数组中的查找问题
+总结3种方法可做此题：
+1.依次遍历二维数组，查找是否存在。时间复杂度O(n^2);
+2.因为是有序的，故首先想到二分查找，可对每一行进行二分查找。此时间复杂度为O(NlgN);
+3.从二维数组的右上角开始，往回逼，此时间复杂度为O(n);
+    class Solution {
+public:
+    bool Find(int target, vector<vector<int> > array) {
+        //倒逼法解决
+        int row = array.size();
+        int column = array[0].size();
+        int i = 0;
+        int j = row - 1;
+        while(i<column && j>=0){
+            if(target > array[j][i]){
+                i++;
+            }
+            else if(target < array[j][i]){
+                j--;
+            }
+            else
+                return true;
+        }
+        return false;
+    }
+};
+
+
+
+
+替换数组中的空格为%20
+两种方法：
+1.开辟新数组，替换空格后，放入新数组。时间复杂度O(N),空间复杂度O(N)；
+2.不额外占用空间，先计算替换后的数组长度，两个指针从后往前改变原数组内容。时间复杂度O(N)。
+第二种源码：
+class Solution {
+public:
+    void replaceSpace(char *str,int length) {
+        //不开辟新数组，原数组从后往前遍历
+        //1.先计算出空格数量，以求出替换后长度
+        int BlankNum = 0;
+        int OldBlankNum ;
+        for (OldBlankNum = 0;str[OldBlankNum] != '\0';OldBlankNum++ ){
+            if(str[OldBlankNum] == ' '){BlankNum++;}
+        }
+        int newLength = length + BlankNum*2;
+        str[newLength] = '\0';
+        int pointer1=length-1,pointer2 = newLength-1;
+        while(pointer1>=0){
+            if(str[pointer1] == ' '){
+                str[pointer2--] = '0';
+                str[pointer2--] = '2';
+                str[pointer2--] = '%';
+            }
+            else
+                str[pointer2--] = str[pointer1];
+            pointer1--;
+        }
+    }
+};
+
