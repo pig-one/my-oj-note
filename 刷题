@@ -431,3 +431,115 @@ private:
         }
     }
 };
+
+
+
+
+2019.2.21 根据前序和中序遍历序列重构树
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) {
+        int size = vin.size();
+        if(size == 0){
+            return NULL;
+        }
+        vector<int> pre_left,pre_right,vin_left,vin_right;
+        TreeNode *node = new TreeNode(pre[0]);
+        int p ;
+        for(p=0; p<size; p++){
+            if(vin[p] == pre[0])
+                break;
+        }
+        for(int i = 0; i<size;i++){
+            if(i<p){
+                pre_left.push_back(pre[i+1]);
+                vin_left.push_back(vin[i]);
+            }
+            if(i>p){
+                pre_right.push_back(pre[i]);
+                vin_right.push_back(vin[i]);
+            }
+        }
+        node->left = reConstructBinaryTree(pre_left,vin_left);
+        node->right = reConstructBinaryTree(pre_right,vin_right);
+        return node;
+    }
+};
+
+
+
+
+141.判断给定的链表是否有环。
+采用快慢指针
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* pointerfast = head;
+        ListNode* pointerslow = head;
+        while(pointerfast && pointerfast->next){
+            
+            pointerslow = pointerslow->next;
+            pointerfast = pointerfast->next->next;
+            if(pointerfast == pointerslow){return true;}
+        }
+        return false;
+    }
+};
+
+
+
+
+142Linked List Cycle II
+思路：
+1.快慢指针，快指针是慢指针的二倍。
+2.当相遇说明有环，修改慢指针指向head，快指针行进速度改为1，当两个指针再次相遇，该节点即为环的入口节点。
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *fast = head;
+        ListNode *slow = head;
+        while(fast && fast->next){
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast == slow) {
+                slow = head;
+                int i = 0;
+                while(fast != slow){
+                    slow = slow->next;
+                    fast = fast->next;
+                    i++;
+                }
+                cout<<"tail connects to node index "<<i<<endl;
+                return slow;
+            }
+        }
+        
+        return NULL;
+    }
+};
