@@ -543,3 +543,103 @@ public:
         return NULL;
     }
 };
+
+
+
+783. Minimum Distance Between BST Nodes(简单  不好想明白)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:   
+    int res = 100;
+    int pre =-1;
+    int minDiffInBST(TreeNode* root) {
+        if(root->left){
+            minDiffInBST(root->left);
+        }
+        if(pre >= 0){
+            res = min(res,root->val - pre);
+        }
+        pre = root->val;
+        if(root->right){
+            minDiffInBST(root->right);
+        }
+        return res;
+    }
+};
+
+
+
+
+二叉树的中序遍历
+我的代码：Runtime: 8 ms, faster than 20.88% of C++ online submissions for Binary Tree Inorder Traversal.
+Memory Usage: 11.2 MB, less than 5.11% of C++ online submissions for Binary Tree Inorder Traversal.
+
+class Solution {
+public:
+    vector<int> buf;
+    vector<int> inorderTraversal(TreeNode* root) {
+        if(root){
+            inorderTraversal(root->left);
+            buf.push_back(root->val);
+            inorderTraversal(root->right);
+        }
+        return buf;
+    }
+};
+别人的代码：Runtime: 4 ms, faster than 100.00% of C++ online submissions for Binary Tree Inorder Traversal.
+Memory Usage: 9.5 MB, less than 14.60% of C++ online submissions for Binary Tree Inorder Traversal.
+// Recursion
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode *root) {
+        vector<int> res;
+        inorder(root, res);
+        return res;
+    }
+    void inorder(TreeNode *root, vector<int> &res) {
+        if (!root) return;
+        if (root->left) inorder(root->left, res);
+        res.push_back(root->val);
+        if (root->right) inorder(root->right, res);
+    }
+};
+
+
+
+
+
+230. Kth Smallest Element in a BST
+我的代码：Runtime: 32 ms, faster than 78.34% of C++ online submissions for Kth Smallest Element in a BST.
+Memory Usage: 22.2 MB, less than 6.95% of C++ online submissions for Kth Smallest Element in a BST.
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        vector<int> res;
+        inOrder(root,res);
+        sort(res.begin(),res.end());
+        return res[k-1];
+    }
+    void inOrder(TreeNode* root,vector<int>& res){
+        if(!root) return;
+        if(root->left){inOrder(root->left,res);}
+        res.push_back(root->val);
+        if(root->right){inOrder(root->right,res);}
+    }
+};
