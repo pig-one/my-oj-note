@@ -318,3 +318,116 @@ public:
     }
 };
 
+
+
+
+stack 
+20. Valid Parentheses括号匹配，字符串是否合法问题
+class Solution {
+public:
+    bool isValid(string s) {
+        stack <char> st;
+        for(char a : s){
+            if(a == '(' || a=='[' || a=='{'){
+                st.push(a);
+            }else{
+                if(st.empty()) return false;
+                if(st.top() != '(' && a == ')') {
+                     return false;
+                }
+                if(st.top() != '{' && a == '}') {
+                     return false;
+                }
+                if(st.top() != '[' && a == ']') {
+                     return false;
+                }
+                st.pop();
+            }
+        }
+        //return st.empty();
+        if(st.empty())
+            return true;
+        else
+            return false;
+    }
+};
+
+
+
+
+树
+965. Univalued Binary Tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    //先序遍历来解
+    bool PreOrderTraverse(TreeNode* root,int data){
+        if(root){
+            if(data != root->val){return false;}
+            else if(!PreOrderTraverse(root->left,data)) return false;
+            else if(!PreOrderTraverse(root->right,data)) return false;
+        }
+        return true;
+    }
+    bool isUnivalTree(TreeNode* root) {
+        int data = root->val;
+        return PreOrderTraverse(root,data);
+        
+    }
+};
+
+
+
+
+
+95. Unique Binary Search Trees II（不懂QaQ！！！！！！！！！！！！！！！）
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*>tree;
+        if(n==0){
+            return tree;
+        }
+        dfs(1,n,tree);
+        return tree;    
+    }
+private:
+    void dfs(int start,int end,vector<TreeNode*>& tree){
+        if(start>end){
+            tree.push_back(NULL);
+            return;
+        }
+        for(int i=start;i<=end;++i){
+            vector<TreeNode*>left;
+            vector<TreeNode*>right;
+            dfs(start,i-1,left);
+            dfs(i+1,end,right);
+            for(int j=0;j<left.size();++j){
+                for(int k=0;k<right.size();++k){
+                    TreeNode* root = new TreeNode(i);
+                    root->left = left[j];
+                    root->right = right[k];
+                    tree.push_back(root);
+                }
+            }
+            
+        }
+    }
+};
