@@ -841,3 +841,26 @@ public:
 };
 
 
+
+451. Sort Characters By Frequency
+我的代码：Runtime: 28 ms, faster than 44.79% of C++ online submissions for Sort Characters By Frequency.
+Memory Usage: 18.5 MB, less than 12.74% of C++ online submissions for Sort Characters By Frequency.
+class Solution {
+public:
+    string frequencySort(string s) {
+        int len = s.size();
+        unordered_map<char,int> hash;                           //map键值对容器，unordered_map
+        vector<string> vec(len+1,"");
+        for(auto ch : s){hash[ch]++;}
+        for(auto val : hash){
+            vec[val.second].append(val.second,val.first) ;         //vec[val.second]，该字母个数越多，在vector中排的越靠后。至于.append(数字，字母)实现在“”后面加上n个字母。
+        }
+        string ans;
+        for(int i = len;i>0;i--){
+            ans += vec[i];
+        }
+        return ans;
+            
+        
+    }
+};
