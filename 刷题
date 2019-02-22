@@ -744,4 +744,45 @@ public:
 
 
 
+703. Kth Largest Element in a Stream
+Runtime: 48 ms, faster than 100.00% of C++ online submissions for Kth Largest Element in a Stream.
+Memory Usage: 19.4 MB, less than 82.35% of C++ online submissions for Kth Largest Element in a Stream.
+class KthLargest {
+public:
+    vector<int> buf;
+    int rk = 0;
+    int heap_size = 0;
+    KthLargest(int k, vector<int> nums) {
+        rk = k;
+        buf.assign(nums.begin(),nums.end());
+        heap_size = nums.size();
+        make_heap(buf.begin(),buf.end(),greater<int>());
+        while(heap_size > k){
+            pop_heap(buf.begin(),buf.end(),greater<int>());
+            buf.pop_back();
+            heap_size--;
+        }
+    }
+    
+    int add(int val) {
+        if(heap_size < rk){
+            buf.push_back(val);
+            push_heap(buf.begin(),buf.end(),greater<int>());
+            heap_size++;
+        }
+        else if(val > buf[0]){
+            pop_heap(buf.begin(),buf.end(),greater<int>());
+            buf[rk - 1] = val;
+            push_heap(buf.begin(),buf.end(),greater<int>());
+        }
+        return buf[0];
+    }
+};
+
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest obj = new KthLargest(k, nums);
+ * int param_1 = obj.add(val);
+ */
+
 
