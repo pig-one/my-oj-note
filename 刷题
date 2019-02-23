@@ -864,3 +864,23 @@ public:
         
     }
 };
+
+
+387. First Unique Character in a String
+利用map映射的代码：Runtime: 96 ms, faster than 9.91% of C++ online submissions for First Unique Character in a String.
+Memory Usage: 13.8 MB, less than 14.53% of C++ online submissions for First Unique Character in a String.
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        int len = s.size();
+        map<char,int> maps;
+        for(int i = 0; i <len;++i){
+            maps[s[i]]++;
+        }
+        for(int i = 0; i < len;++i){
+            if(maps[s[i]] == 1)
+                return i;
+        }
+        return -1;
+    }
+};
