@@ -866,6 +866,8 @@ public:
 };
 
 
+2019.2.23
+
 387. First Unique Character in a String
 利用map映射的代码：Runtime: 96 ms, faster than 9.91% of C++ online submissions for First Unique Character in a String.
 Memory Usage: 13.8 MB, less than 14.53% of C++ online submissions for First Unique Character in a String.
@@ -882,5 +884,46 @@ public:
                 return i;
         }
         return -1;
+    }
+};
+
+
+
+166. Fraction to Recurring Decimal
+搜集代码：Runtime: 4 ms, faster than 100.00% of C++ online submissions for Fraction to Recurring Decimal.
+Memory Usage: 9 MB, less than 37.14% of C++ online submissions for Fraction to Recurring Decimal.
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        //分数的分子和分母
+        if(numerator == 0){return "0";}
+        string res;
+        if(numerator<0 ^ denominator<0){res += '-';}
+        long long int n = numerator,d = denominator;
+        n = abs(n);
+        d = abs(d);
+        res += to_string(n/d);
+        long long int r = n%d;
+        if(r == 0){return res;}
+        else{
+            res += '.';
+        }
+        map<int,int> hash;
+        while(r){
+            if(hash.find(r) != hash.end()){
+                res.insert(hash[r],1,'(');
+                res += ')';
+                break;
+            }
+            hash[r] = res.size();
+            r *= 10;
+            res += to_string(r/d);
+            r = r%d;
+            //hash[r]++;
+            //res.insert(r,res.size());
+            //res.to_string();
+        }
+        return res;
+        
     }
 };
