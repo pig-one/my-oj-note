@@ -927,3 +927,46 @@ public:
         
     }
 };
+
+
+
+
+687. Longest Univalue Path
+网上代码Runtime: 156 ms, faster than 69.07% of C++ online submissions for Longest Univalue Path.
+Memory Usage: 49.9 MB, less than 84.82% of C++ online submissions for Longest Univalue Path.
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int longestUnivaluePath(TreeNode* root) {
+        if(!root){return 0;}
+        int max = 0;
+        dfs(root,max);
+        return max;
+    }
+    int dfs(TreeNode *root,int &max){
+        int l = 0;
+        int r = 0;
+        if(root->left && root->left->val == root->val){
+            l = 1 + dfs(root->left,max); }
+        else if(root->left)
+            dfs(root->left,max);
+        
+        if(root->right && root->right->val == root->val){
+            r = 1 + dfs(root->right,max);
+        }
+        else if(root->right)
+            dfs(root->right,max);
+        if(l + r > max)
+            max = l + r;
+        return (l>r) ? l : r; 
+
+    }
+};
