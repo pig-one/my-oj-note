@@ -1,3 +1,134 @@
+
+归并排序：
+#include "pch.h"
+#include <iostream>
+using namespace std;
+
+void MergeTwoList(int* list,int start,int middle,int end) {
+	const int len1 = middle - start + 1;
+	const int len2 = end - middle;
+	const int len = end - start + 1;
+	//cout << list[0]<<endl;
+	int i, j, k;
+	int* front = (int*)malloc(sizeof(int)*len1);
+	int* back = (int*)malloc(sizeof(int)*len2);
+	for (i = 0; i < len1; i++)
+	{
+		front[i] = list[start+i];
+	}
+	for (j = 0; j < len2; j++) {
+		back[j] = list[middle + j+1];
+	}
+	for (i = 0, j = 0, k = start; i < len1&&j < len2&&k < end; k++) {
+		if (front[i] < back[j]) {
+			list[k] = front[i];
+			i++;
+		}
+		else {
+			list[k] = back[j];
+			j++;
+		}
+			
+	}
+	while (i < len1) {
+		list[k++] = front[i++];
+	}
+	while (j<len2)
+	{
+		list[k++] = back[j++];
+	}
+
+}
+
+void Msort(int* list, int start, int end) {
+	if (start < end) {
+		int mid = (start + end) / 2;
+		Msort(list, 0, mid);
+		Msort(list, mid + 1, end);
+		MergeTwoList(list, start, mid, end);
+	}
+}
+
+
+
+int main()
+{
+    std::cout << "Hello World!\n";
+#define N 10
+	int A[N] = { 21,32,4,32,65,2,43,44,33,22 };
+	cout << "The origin list is:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+	Msort(A, 0,9);
+	cout <<endl<< "After Sort:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+#undef N
+}
+
+快速排序：
+#include "pch.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+
+void swap(int& a, int& b) {
+	int temp;
+	temp = b;
+	b = a;
+	a = temp;
+}
+
+int Partition(int* list,int start,int end) {
+	int pivotKey;
+	pivotKey = list[start];
+	while (start<end)
+	{
+		while (start<end&&list[end]>=pivotKey)
+		{
+			end--;
+		}
+		swap(list[start],list[end]);
+		while (start<end&&list[start]<=pivotKey)
+		{
+			start++;
+		}
+		swap(list[start], list[end]);
+	}
+	return start;
+}
+
+void QuickSort(int* list, int low, int high) {
+	int pivot;
+	if (low < high) {
+		pivot = Partition(list, low, high);
+		QuickSort(list,low,pivot-1);
+		QuickSort(list, pivot + 1, high);
+	}
+}
+
+void Quick_Sort(int* list,int count) {
+	QuickSort(list,0,count-1);
+}
+
+int main()
+{
+    std::cout << "Hello World!\n";
+#define N 10
+ 
+	int a[N] = { 4,5,84,54,14,5,3,1,2 };
+	Quick_Sort(a,9);
+	for (int i = 0; i < 10; i++)
+	{
+		cout << a[i] << endl;
+	}
+}
+
+
+
+
 数组问题，移动0到数组后。
 class Solution {
 public:
