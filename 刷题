@@ -1,3 +1,37 @@
+修复字符串
+#include "pch.h"
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define N 1000
+
+int main()
+{
+    std::cout << "Hello World!\n"; 
+	int n;
+	cin >> n;
+	while (n--)
+	{
+		char str[N];
+		cin >> str;
+		int i, j;
+		for ( i = 2,j=2; j < strlen(str); j++)
+		{
+			if (str[i-2]==str[i-1]&&str[i-1]==str[j])//三个数相同
+			{
+				continue;
+			}
+			if (i >= 3 && str[i - 3] == str[i - 2] && str[i - 1] == str[j]) {//两对两个相同的数
+				continue;
+			}
+			else
+				str[i++] = str[j];
+		}
+		str[i] = '\0';
+		cout << str << endl;
+	}
+}
+
 
 归并排序：
 #include "pch.h"
