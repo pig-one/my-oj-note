@@ -1,3 +1,61 @@
+堆排序 ：
+#include "pch.h"
+#include <iostream>
+using namespace std;
+void swap(int &a, int &b) {
+	int temp = b;
+	b = a;
+	a = temp;
+}
+
+void Heap_Adjust(int* list,int s,int m) {
+	int tmp = list[s];
+	for (int j = 2 * s + 1; j <= m;j=2*j+1) {
+		if (list[j] < list[j + 1] && j < m) {
+			j++;
+		}
+		if (tmp > list[j])
+			break;
+		list[s] = list[j];
+		s = j;
+	}
+	list[s] = tmp;
+}
+
+void Heap_Sort(int* list, int length) {
+	//创建大顶堆的渗透函数
+	for (int s = length / 2 - 1; s >= 0; s--) {//length/2-1,找到第一个非叶节点
+		Heap_Adjust(list, s, length - 1);
+	}
+	//反复利用渗透函数实现排序的函数
+	for (int i = length - 1; i >= 1; i--) {
+		swap(list[0], list[i]);
+		Heap_Adjust(list,0,i-1);
+	}
+}
+
+int main()
+{
+    std::cout << "Hello World!\n"; 
+#define N 10
+	int A[N] = { 21,32,4,32,65,2,43,44,33,22 };
+	cout << "The origin list is:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+	Heap_Sort(A, 10);
+	cout << endl << "After Sort:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+#undef N
+}
+
+
+
+
+
+
 修复字符串
 #include "pch.h"
 #include <iostream>
