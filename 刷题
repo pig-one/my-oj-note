@@ -1,3 +1,72 @@
+桶排序：
+	待排序的数字都均匀分布在（min，max）之间；
+	
+
+
+
+int转中文数字
+
+#include "pch.h"
+#include <iostream>
+#include <string>
+using namespace std;
+#include <iostream>
+#include <string>
+using namespace std;
+string unite[5] = { "","十","百","千","万" }; //单位
+string num[10] = { "零","一","二","三","四","五","六","七","八","九" }; //一个汉字占两个字节,另外再加一个'\0'字符.
+string func(int a)
+{
+	int flag = 0, tmp;
+	string strtmp;
+	string result;
+	int atemp = a;     //设定a的临时存储值，防止每次进入循环都进行末尾零的判断
+	while (a != 0)
+	{
+
+		while (atemp % 10 == 0)           //数字为10的整数倍
+		{									//数字为100的整数倍
+			flag++;
+			atemp /= 10;
+			a /= 10;
+		}
+
+		tmp = a % 10;
+		if (tmp != 0)
+			strtmp = num[tmp] + unite[flag];
+		else if (tmp == 0)
+			strtmp = "零";
+		result = strtmp + result;
+		a /= 10;
+		flag++;
+	}
+	return result; 
+}
+string convert(int a)
+{
+	string result, temp;
+	if (a < 100000)
+		result = func(a);
+	else
+	{
+		temp = func(a / 10000);
+		result = temp + "万" + func(a - a / 10000 * 10000);
+	}
+	return result;
+}
+void main()
+{
+	int num;
+	string numstring;
+	cout << "please input the num: ";
+	cin >> num;
+	numstring = convert(num);
+	cout << "the convert result is: " << numstring << endl;
+}
+
+
+
+
 堆排序 ：
 #include "pch.h"
 #include <iostream>
