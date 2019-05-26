@@ -1,6 +1,75 @@
-桶排序：
-	待排序的数字都均匀分布在（min，max）之间；
+插入排序：
+void InsertSort(int *list,int length) {
+	int n = length;
+	int i, j, v;
+	for (i = 1; i < n; i++) {
+		v = list[i];
+		j = i;
+		while (j>=1&&list[j-1]>v)
+		{
+			list[j] = list[j - 1];
+			j--;
+		}
+		list[j] = v;
+		cout << "第" << i << "趟排序后结果：" << endl;
+		for (int k = 0; k < length; k++) {
+			cout << list[k] << " ";
+		}
+		cout << endl;
+	}
+}
+
+int main()
+{
+	int list[6] = { 8,2,4,2,32,6 };
+	InsertSort(list, 6);
 	
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+
+希尔排序（缩小增量排序）：
+void ShellSort(int* list,int length) {
+	int index = sizeof(list) / 2;
+	//std::cout << sizeof(list);
+	int temp = 0;
+	while (index >= 1)
+	{
+		for (int i = index; i < length; i++) {
+			for (int j = i - index; j >= 0; j -= index) {
+				if (list[j] > list[j + index]) {
+					temp = list[j];
+					list[j] = list[j + index];
+					list[j + index] = temp;
+				}
+			}
+		}
+		index = index/2;
+	}
+}
+
+int main()
+{
+	int A[6] = { 43,2,3,22,3,1 };
+	ShellSort(A,6);
+	for (int i = 0; i < 6; i++) {
+		std::cout << A[i] << " ";
+	}
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+
+
+
+桶排序：
+	待排序的数字都均匀分布在（min，max）之间；需要两个辅助空间：1.桶空间2.筒内的链表空间。
+空间复杂度O（n）;两个关键步骤：1.放入对应的桶，2.如果桶内有元素，使用插入排序放入桶中的合适位置。
 
 
 
