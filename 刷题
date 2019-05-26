@@ -1,3 +1,64 @@
+基数排序：
+
+int maxbit(int* list, int n) {//求数据的最大位数
+	int d = 1;
+	int p = 10;
+	for (int i = 0; i < n; i++) {
+		while (list[i]>p)
+		{
+			p *= 10;
+			d++;
+		}
+	}
+	return d;
+}
+void radixSort(int* list, int n) {
+	int d = maxbit(list,n);     //最大数的位数，也是需要进行排序的趟数
+	int* temp = new int[n];
+	int* count = new int[10];
+	int i, j, k;
+	int radix = 1;
+	for (int i = 0; i <= d; i++) {
+		for (j = 0; j < 10; j++) {
+			count[j] = 0;
+		}
+		for (j = 0; j < 10; j++) {
+			k = (list[j] / radix) % 10;//统计每个桶中的记录数
+			count[k]++;
+		}
+		for (j = 1; j < 10; j++) {
+			count[j] = count[j - 1] + count[j];
+		}
+		for (j = n - 1; j >= 0; j--) {
+			k = (list[j] / radix) % 10;
+			temp[count[k] - 1] = list[j];
+			count[k]--;
+		}
+		for (j = 0; j < n; j++) {
+			list[j] = temp[j];
+		}
+		radix = radix * 10;
+	}
+	delete[] temp;
+	delete[] count;
+}
+
+
+int main()
+{
+
+	int a[10] = { 4,1,2,2,6,3,9,6,8,8 };
+	radixSort(a, 10);
+	for (int i = 0; i < 10; i++) {
+		cout << a[i] << " ";
+	}
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+
 插入排序：
 void InsertSort(int *list,int length) {
 	int n = length;
