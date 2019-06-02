@@ -1,0 +1,11 @@
+一切皆socket
+
+1. socket（）函数，对应于普通文件的打开操作，返回文件描述符，通俗的讲就是创建一个socket
+   int socket(int domain,int type,int protocol);domain:协议簇，ipv4？ipv6   type：socket类型     protocol：协议，tcp？udp
+   
+2. bind（）函数，把一个地址族（domain）中的特定地址赋给socket，就是将上个函数返回的文件描述字绑定一个名字
+   int bind(int sockfd,const struct sockaddr * addr,socklen_t addrlen);sockfd:上一个函数返回的文件描述字。addr：一个指针，这个指针指向要
+   绑定给文件描述字的协议地址，不同的socket的协议簇有不同的此地址。     addrlen：地址长度
+   
+3. listen（）函数，服务器如果创建了socket，并bind（）后，会调用listen（）来监听这个socket。
+   int listen(int sockfd,int backlog)
