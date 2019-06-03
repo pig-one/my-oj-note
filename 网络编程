@@ -8,4 +8,49 @@
    绑定给文件描述字的协议地址，不同的socket的协议簇有不同的此地址。     addrlen：地址长度
    
 3. listen（）函数，服务器如果创建了socket，并bind（）后，会调用listen（）来监听这个socket。
-   int listen(int sockfd,int backlog)
+   int listen(int sockfd,int backlog)第一个参数是要监听的socket描述字，第二个参数是最大连接个数。
+   
+4. connect()函数，客户端调用这个函数，来建立与tcp服务器的连接。
+   int connect(int sockfd,const struct sockaddr *addr,socklen_t addrlen)；注意：第一个参数是客户端的socket描述字，第二个参数为服务器的socket地址，第三个参数为地址长度
+   
+5. accept()函数，服务器接收到客户端发过来的connect()之后，会调用accept()函数来接受请求，这样就建立好链接，然后可以开始网络IO。
+   int accept(int sockfd,const struct sockaddr *addr,socklen_t *addrlen)；
+   注意：参数为监听socket描述字，而这个函数的返回值称为已连接的socket描述字。
+   
+6. read()/write(),recvmsg()/sendmsg().......
+   int send(int sockfd,const char FAR *buf,int len,int flags);第一个参数为发送端socket描述符。第二个参数指明一个缓冲区，用来存放应用程序要发送的数据。
+   第三个参数指明实际要发送的数据的字节数，第四个参数一般置0；
+   int recv(int sockfd,char FAR *buf,int len,int flags);第二个参数存放recv函数接收到的数据，第三个指明buf的长度，第四个置0；
+   
+   
+7. void memset（void *s,int ch,size_t n）；通常为初始化函数，为新申请的内存做初始化工作.
+   将s中当前位置后面的n个字节用ch替换并返回s；
+   
+8. strncmp(const *char str1,const *char str2,size_t n);
+   s1和s2前n个字符比较，ascII码值相减，如果为0，则说明前n个字符相等，否则返回的是两个字符的ascII差值.
+   
+9. readdir()函数：读取目录函数，使用它需要包含<sys/types.h>和<dirent.h>。。。。。个人理解：循环读取dir，目录和文件都读
+   struct dirent *readdir(DIR *dir);该函数返回参数dir目录流的下个目录进入点.
+         struct dirent
+      {
+          ino_t d_ino; //d_ino 此目录进入点的inode
+          ff_t d_off; //d_off 目录文件开头至此目录进入点的位移
+          signed short int d_reclen; //d_reclen _name 的长度, 不包含NULL 字符
+          unsigned char d_type; //d_type d_name 所指的文件类型 d_name 文件名
+          har d_name[256];
+      };
+   
+   opendir()函数：获取name子目录下的所有文件和目录的列表，如果name是个文件则返回值为NULL（打开一个目录）
+   DIR *opendir(const char* name);
+   
+   
+   
+10. close()函数，io之后就需要关闭相应的socket描述字。
+      注意close（int fd）函数使相应的socket（）描述字的引用计数-1，只有当引用计数为0的时候，才会触发tcp客户端向服务器发送连接终止的请求。
+  
+  
+  
+11.计算机中常用的数据传输方式有两种，SOCK_STREAM和SOCK_DGRAM（效率较高，校验工作少，无法对错误数据进行重传qq视频聊天和语音聊天）
+   linux中两台计算机之间的通信，实际上就是两个socket文件互相读写
+
+
