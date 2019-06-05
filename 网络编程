@@ -69,4 +69,6 @@
 15. setsocket（）函数：操作套接字层的选项
       socket(int sock,int level,int optname,const void *optval,socklen_t optlen):第一个参数是将要被设置或者选项的套接字。
       第二个参数是选项所在的协议层，第三个选项需要访问的选项名，第四个选项指向包含新选项值的缓冲，第五个现选项的长度
+      
+16. struct sockaddr：是一个通用的地址结构，目的是为了让不同的地质结构被bind，connect等函数调用。struct sockaddr_in 表示网络地址
    
