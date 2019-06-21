@@ -1,3 +1,24 @@
+websocket，以json的方式传输消息
+
+1. namespace：区别不同库中相同的变量，函数等，使用命名空间即定义了上下文，本质上命名空间就是定义了一个范围。
+2.json写法
+   j["pi"] = 3.141;
+   还可以这样写：
+   json j2{
+      {"pi",3.141},
+      {"happy",false},
+      {"name","zhuyuanwei"}
+   }
+   
+3. json的序列化和反序列化
+从字符串字面创建对象
+json j = "{\"happy\":true,\"pi\":3.141}"_json
+
+4.json通常用于和服务器端交换数据
+
+
+
+
 一切皆socket
 
 1. socket（）函数，对应于普通文件的打开操作，返回文件描述符，通俗的讲就是创建一个socket
