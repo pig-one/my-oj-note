@@ -1,3 +1,11 @@
+6.22刷题日记，目标15道
+1.堆排序（get）
+2.选择排序
+
+
+
+
+
 选择排序：
 #include "pch.h"
 #include <iostream>
@@ -33,7 +41,7 @@ int main()
 	for (i = 0; i < N; i++) {
 		cout << setw(3) << a[i];
 	}
-	cout << endl;
+	cout << endl; 
 
     std::cout << "Hello World!\n"; 
 }
