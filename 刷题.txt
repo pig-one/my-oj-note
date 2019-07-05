@@ -1,0 +1,1640 @@
+﻿6.22刷题日记，目标15道
+1.堆排序（get）
+2.选择排序+伪随机数产生（get）
+3.(****)希尔排序最好情况O（nlogn），O(nlog2n),O(nlog2n),空间O(1)（get）
+4.哈夫曼树(两种基于顺序表和基于最小堆)，给定一个字符串，按权值排列，条权值最小的两个组成一棵树，得到的父节点再次插入数据中。
+四步：权值及排序，建树，编码，写入压缩文件
+5.二维数组中的查找（get）
+6.修复字符串(get)
+7.数组中重复的数字（get），3种方法，排序，哈希，下标
+8.替换空格（get）计算新长度
+9.从尾到头打印链表（get）栈
+10.重建二叉树
+
+
+7.1刷题（主题优化时间和空间效率）
+重建二叉树，2遍（不太会）
+找到数组中第k大的数字，利用快排的partition思想，时间复杂度是O（N*logK）,k已经给出，所以时间复杂度为O(n)，可以修改输入的数组时可用。
+
+数组中出现次数超过一半的数字(基于Partition的时间复杂度为O(n)的算法)
+两个关键：解法一：partition，中位数必定是结果。	
+			解法二：一个数字，几个记录，相互抵消，最后剩下的既是所求。
+
+最小的k个数，解法一：partition   O(n)
+				解法二：O(nlogK)
+
+
+7.2 刷题
+Leetcode合并k个排序链表，这个题用最小堆实现，涉及到stl的优先队列
+优先队列：普通队列即先进先出，优先队列，元素被赋予优先级，当访问元素时，具有最高优先级的元素最先删除，特点最高级先出。
+q.top()是一个查找操作，在最大优先队列中找优先权最大的元素
+
+
+7.3刷题
+1.删除元素
+给定数组和一个值val，删除数组中所有值为val的地方，并返回新长度，要求不能开辟额外空间，只能在内存中修改输入数组。元素次序可变。
+（easy，自己解决）
+2.在排好序的数组中找出第一个和最后一个位置的元素
+   给定排好序（升序）的数组，找出给定的target值所在的开始和结束位置。算法的时间复杂度要求O(logN),如果target未找到，那么返回[-1,-1]
+(medium,二分法，返回两个值，两次二分，参考了网上思想，需要归纳)
+二分法都是后一半的middle+1
+3.两数之和，给一组整数，返回两个数（相加和为target）的下标。可以假设每个输入都有确定的一个解，你不能使用一个元素两次。
+思路：如果想用线性的时间复杂度去解决，就等同于说只能遍历一个数字。这时候另外一个数字需要先存储起来，
+          使用hashmap（建立数字和其坐标位置之间的映射），它的查找效率是常数级的。总之两步1.建hashmap。2.查找
+          用到了unordered_map<键，值>,关联容器，内部采用hash表结构，拥有快速检索的功能。相当于桶，一个同可以有多个元素。
+          常用函数：find，at，erase，insert，clear，swap等。
+为什么set不会有重复，因为hashmap在put一个key时，会判断放进去的hash值与目前hashmap定位到的那个hashmap比较 	。
+4.三数之和，target为0.
+思路： 1.排序2.遍历到倒数第三个（剪枝优化，正数break，重复跳过）3.0减去遍历到的数得到target4.在剩下的数中找到两数之和为target就行。
+第四步用双指针实现，同时两个指针去重复，如果两数之和小于target，左指针右移。
+5.两个排序数组的中位数，给定两个已排好序的数组，找出中位数，时间复杂度应该为O(log(m+n)).
+思路：首先想到归并排序的核心合并两个有序数组，然后找出中位数，时间复杂度O(m+n),并不符合要求。而且leetcode自带的编译环境貌似有bug
+          中位数与位置有关，A数组的前一半和B数组中的后一半中的最大元素和另一半的最小元素/2，即为中位数
+		（hard）待解决！！！
+
+6.最长回文子串，给定一个字符串s，找出s中最长的会问子串，假定s的最大长度为1000.
+思路：两个指针，指向头尾，O(n*n) 
+          搜了一下：1.中心扩展法，时间O(n*n)，空间O(1)2.动态规划，时间O(N^2),空间复杂度O(N^2).3.Manacher，时间O(n),空间O(n)
+          Manacher算法和中心扩展法存在一样的问题，所以都是用同样的小trick，在字符串间隔中加上#。
+
+
+//.四数之和，给定一个有n个整数的数组nums和一个整数target，给出nums是否存在元素abcd相加的和为target，找出所有不同的组合。
+    STL中的treeset可以实现去重复
+
+
+
+
+选择排序：
+#include "pch.h"
+#include <iostream>
+#include <time.h>
+#include <iomanip>
+using namespace std;
+const int N = 10;
+
+int main()
+{
+	int a[N], i, j, temp, b;
+	srand(time(NULL));
+	for ( i = 0; i < N; i++) {
+		a[i] = rand() % 100;
+	}
+	for (i = 0; i < N; i++) {
+		cout << setw(3) << a[i];
+	}
+	cout << endl;
+	for (i = 0; i < N - 1; i++) {
+		temp = i;
+		for (j = i + 1; j < N; j++) {
+			if (a[temp] > a[j])
+				temp = j;
+		}
+		if (i != temp) {
+			b = a[temp];
+			a[temp] = a[i];
+			a[i] = b;
+
+		}	
+	}
+	for (i = 0; i < N; i++) {
+		cout << setw(3) << a[i];
+	}
+	cout << endl; 
+
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+基数排序：
+
+int maxbit(int* list, int n) {//求数据的最大位数
+	int d = 1;
+	int p = 10;
+	for (int i = 0; i < n; i++) {
+		while (list[i]>p)
+		{
+			p *= 10;
+			d++;
+		}
+	}
+	return d;
+}
+void radixSort(int* list, int n) {
+	int d = maxbit(list,n);     //最大数的位数，也是需要进行排序的趟数
+	int* temp = new int[n];
+	int* count = new int[10];
+	int i, j, k;
+	int radix = 1;
+	for (int i = 0; i <= d; i++) {
+		for (j = 0; j < 10; j++) {
+			count[j] = 0;
+		}
+		for (j = 0; j < 10; j++) {
+			k = (list[j] / radix) % 10;//统计每个桶中的记录数
+			count[k]++;
+		}
+		for (j = 1; j < 10; j++) {
+			count[j] = count[j - 1] + count[j];
+		}
+		for (j = n - 1; j >= 0; j--) {
+			k = (list[j] / radix) % 10;
+			temp[count[k] - 1] = list[j];
+			count[k]--;
+		}
+		for (j = 0; j < n; j++) {
+			list[j] = temp[j];
+		}
+		radix = radix * 10;
+	}
+	delete[] temp;
+	delete[] count;
+}
+
+
+int main()
+{
+
+	int a[10] = { 4,1,2,2,6,3,9,6,8,8 };
+	radixSort(a, 10);
+	for (int i = 0; i < 10; i++) {
+		cout << a[i] << " ";
+	}
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+
+插入排序：
+void InsertSort(int *list,int length) {
+	int n = length;
+	int i, j, v;
+	for (i = 1; i < n; i++) {
+		v = list[i];
+		j = i;
+		while (j>=1&&list[j-1]>v)
+		{
+			list[j] = list[j - 1];
+			j--;
+		}
+		list[j] = v;
+		cout << "第" << i << "趟排序后结果：" << endl;
+		for (int k = 0; k < length; k++) {
+			cout << list[k] << " ";
+		}
+		cout << endl;
+	}
+}
+
+int main()
+{
+	int list[6] = { 8,2,4,2,32,6 };
+	InsertSort(list, 6);
+	
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+
+
+希尔排序（缩小增量排序）：
+void ShellSort(int* list,int length) {
+	int index = sizeof(list) / 2;
+	//std::cout << sizeof(list);
+	int temp = 0;
+	while (index >= 1)
+	{
+		for (int i = index; i < length; i++) {
+			for (int j = i - index; j >= 0; j -= index) {
+				if (list[j] > list[j + index]) {
+					temp = list[j];
+					list[j] = list[j + index];
+					list[j + index] = temp;
+				}
+			}
+		}
+		index = index/2;
+	}
+}
+
+int main()
+{
+	int A[6] = { 43,2,3,22,3,1 };
+	ShellSort(A,6);
+	for (int i = 0; i < 6; i++) {
+		std::cout << A[i] << " ";
+	}
+    std::cout << "Hello World!\n"; 
+}
+
+
+
+查找数组中出现次数超过一半的数字
+#include "pch.h"
+#include <iostream>
+#include<stack>
+#include<time.h>
+#include<exception>
+#define N 10
+using namespace std;
+
+//void swap(int& a, int& b) {
+//	int temp = a;
+//	a = b;
+//	b = temp;
+//}
+//
+//int Partition(int* list,int length,int start,int end){
+//	int key = list[start];
+//	if (start<length)
+//	{
+//		while (start < end&&key <= list[end]) {
+//			end--;
+//		}
+//		swap(list[start], list[end]);
+//		while (start<end && key>=list[start])
+//		{
+//			start++;
+//		}
+//		swap(list[start], list[end]);
+//	}
+//	return start;
+//}
+//
+//int Search(int* list,int length) {
+//	int start = 0;
+//	int middle =length >> 1;
+//	int end = length - 1;
+//	int pivot = Partition(list, length, start, end);
+//	while (pivot != middle)
+//	{
+//		if (pivot > middle) {
+//			end = pivot - 1;
+//			pivot = Partition(list, length, start, end);
+//		}
+//		else {
+//			start = pivot + 1;
+//			pivot = Partition(list, length, start, end);
+//		}
+//	}
+//	int result = list[middle];
+//	return result;
+//}
+
+int Search(int* list,int length){
+	int count = 0;
+	int number;
+	for (int i = 0; i < length; i++) {
+		if (count == 0) {
+			number = list[i];
+			count = 1;
+		}
+		else 
+		{
+			if (number != list[i++]) {
+				count--;
+			}
+			else
+				count++;
+		}
+	}
+	return number;
+}
+
+int main() {
+	
+	int B[N] = { 1,2,2,2,2,2,8,3,3,4 };
+	int res = Search(B, N);
+	cout << "the number is:" << res;
+}
+
+
+
+数组中最小的k个数
+#include "pch.h"
+#include <iostream>
+#include<stack>
+#include<time.h>
+#include<exception>
+#define N 10
+using namespace std;
+void swap(int& a, int& b) {
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
+int Partition(int* list,int start,int end) {
+	int key = list[start];
+	if (start < end) {
+		while (start<end && list[end] >= key)
+		{
+			end--;
+		}
+		swap(list[start], list[end]);
+		while (start < end&& list[start] <= key) 
+		{
+			start++;
+		}
+		swap(list[start], list[end]);
+	}
+	return start;
+}
+void Search(int* list, int length,int k) {
+	int start = 0;
+	int end = length >> 1;
+	int pivot = Partition(list, start, end);
+	while (pivot != k-1)
+	{
+		if (pivot > k - 1) {
+			end = pivot - 1;
+			pivot = Partition(list, start, end);
+		}
+		else {
+			start = pivot + 1;
+			pivot = Partition(list, start, end);
+		}
+	}
+	for (int i = 0; i < k; ++i) {
+		cout << list[i] << endl;
+	}
+}
+
+int main() {
+	int B[N] = {3,2,5,3,4,8,6,7,5,6};
+	cout << "the number is:" << endl;
+	Search(B, N,4);
+	
+}
+
+
+
+
+桶排序：
+	待排序的数字都均匀分布在（min，max）之间；需要两个辅助空间：1.桶空间2.筒内的链表空间。
+空间复杂度O（n）;两个关键步骤：1.放入对应的桶，2.如果桶内有元素，使用插入排序放入桶中的合适位置。
+
+
+
+int转中文数字
+
+#include "pch.h"
+#include <iostream>
+#include <string>
+using namespace std;
+#include <iostream>
+#include <string>
+using namespace std;
+string unite[5] = { "","十","百","千","万" }; //单位
+string num[10] = { "零","一","二","三","四","五","六","七","八","九" }; //一个汉字占两个字节,另外再加一个'\0'字符.
+string func(int a)
+{
+	int flag = 0, tmp;
+	string strtmp;
+	string result;
+	int atemp = a;     //设定a的临时存储值，防止每次进入循环都进行末尾零的判断
+	while (a != 0)
+	{
+
+		while (atemp % 10 == 0)           //数字为10的整数倍
+		{									//数字为100的整数倍
+			flag++;
+			atemp /= 10;
+			a /= 10;
+		}
+
+		tmp = a % 10;
+		if (tmp != 0)
+			strtmp = num[tmp] + unite[flag];
+		else if (tmp == 0)
+			strtmp = "零";
+		result = strtmp + result;
+		a /= 10;
+		flag++;
+	}
+	return result; 
+}
+string convert(int a)
+{
+	string result, temp;
+	if (a < 100000)
+		result = func(a);
+	else
+	{
+		temp = func(a / 10000);
+		result = temp + "万" + func(a - a / 10000 * 10000);
+	}
+	return result;
+}
+void main()
+{
+	int num;
+	string numstring;
+	cout << "please input the num: ";
+	cin >> num;
+	numstring = convert(num);
+	cout << "the convert result is: " << numstring << endl;
+}
+
+
+
+
+堆排序 ：
+#include "pch.h"
+#include <iostream>
+using namespace std;
+void swap(int &a, int &b) {
+	int temp = b;
+	b = a;
+	a = temp;
+}
+
+void Heap_Adjust(int* list,int s,int m) {
+	int tmp = list[s];
+	for (int j = 2 * s + 1; j <= m;j=2*j+1) {
+		if (list[j] < list[j + 1] && j < m) {
+			j++;
+		}
+		if (tmp > list[j])
+			break;
+		list[s] = list[j];
+		s = j;
+	}
+	list[s] = tmp;
+}
+
+void Heap_Sort(int* list, int length) {
+	//创建大顶堆的渗透函数
+	for (int s = length / 2 - 1; s >= 0; s--) {//length/2-1,找到第一个非叶节点
+		Heap_Adjust(list, s, length - 1);
+	}
+	//反复利用渗透函数实现排序的函数
+	for (int i = length - 1; i >= 1; i--) {
+		swap(list[0], list[i]);
+		Heap_Adjust(list,0,i-1);
+	}
+}
+
+int main()
+{
+    std::cout << "Hello World!\n"; 
+#define N 10
+	int A[N] = { 21,32,4,32,65,2,43,44,33,22 };
+	cout << "The origin list is:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+	Heap_Sort(A, 10);
+	cout << endl << "After Sort:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+#undef N
+}
+
+
+
+
+
+
+修复字符串
+#include "pch.h"
+#include <iostream>
+#include <cstring>
+using namespace std;
+#define N 1000
+
+int main()
+{
+    std::cout << "Hello World!\n"; 
+	int n;
+	cin >> n;
+	while (n--)
+	{
+		char str[N];
+		cin >> str;
+		int i, j;
+		for ( i = 2,j=2; j < strlen(str); j++)
+		{
+			if (str[i-2]==str[i-1]&&str[i-1]==str[j])//三个数相同
+			{
+				continue;
+			}
+			if (i >= 3 && str[i - 3] == str[i - 2] && str[i - 1] == str[j]) {//两对两个相同的数
+				continue;
+			}
+			else
+				str[i++] = str[j];
+		}
+		str[i] = '\0';
+		cout << str << endl;
+	}
+}
+
+
+归并排序：
+#include "pch.h"
+#include <iostream>
+using namespace std;
+
+void MergeTwoList(int* list,int start,int middle,int end) {
+	const int len1 = middle - start + 1;
+	const int len2 = end - middle;
+	const int len = end - start + 1;
+	//cout << list[0]<<endl;
+	int i, j, k;
+	int* front = (int*)malloc(sizeof(int)*len1);
+	int* back = (int*)malloc(sizeof(int)*len2);
+	for (i = 0; i < len1; i++)
+	{
+		front[i] = list[start+i];
+	}
+	for (j = 0; j < len2; j++) {
+		back[j] = list[middle + j+1];
+	}
+	for (i = 0, j = 0, k = start; i < len1&&j < len2&&k < end; k++) {
+		if (front[i] < back[j]) {
+			list[k] = front[i];
+			i++;
+		}
+		else {
+			list[k] = back[j];
+			j++;
+		}
+			
+	}
+	while (i < len1) {
+		list[k++] = front[i++];
+	}
+	while (j<len2)
+	{
+		list[k++] = back[j++];
+	}
+
+}
+
+void Msort(int* list, int start, int end) {
+	if (start < end) {
+		int mid = (start + end) / 2;
+		Msort(list, 0, mid);
+		Msort(list, mid + 1, end);
+		MergeTwoList(list, start, mid, end);
+	}
+}
+
+
+
+int main()
+{
+    std::cout << "Hello World!\n";
+#define N 10
+	int A[N] = { 21,32,4,32,65,2,43,44,33,22 };
+	cout << "The origin list is:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+	Msort(A, 0,9);
+	cout <<endl<< "After Sort:" << endl;
+	for (int i = 0; i < N; i++) {
+		cout << A[i] << " ";
+	}
+#undef N
+}
+
+快速排序：
+#include "pch.h"
+#include <iostream>
+using std::cout;
+using std::endl;
+
+void swap(int& a, int& b) {
+	int temp;
+	temp = b;
+	b = a;
+	a = temp;
+}
+
+int Partition(int* list,int start,int end) {
+	int pivotKey;
+	pivotKey = list[start];
+	while (start<end)
+	{
+		while (start<end&&list[end]>=pivotKey)
+		{
+			end--;
+		}
+		swap(list[start],list[end]);
+		while (start<end&&list[start]<=pivotKey)
+		{
+			start++;
+		}
+		swap(list[start], list[end]);
+	}
+	return start;
+}
+
+void QuickSort(int* list, int low, int high) {
+	int pivot;
+	if (low < high) {
+		pivot = Partition(list, low, high);
+		QuickSort(list,low,pivot-1);
+		QuickSort(list, pivot + 1, high);
+	}
+}
+
+void Quick_Sort(int* list,int count) {
+	QuickSort(list,0,count-1);
+}
+
+int main()
+{
+    std::cout << "Hello World!\n";
+#define N 10
+ 
+	int a[N] = { 4,5,84,54,14,5,3,1,2 };
+	Quick_Sort(a,9);
+	for (int i = 0; i < 10; i++)
+	{
+		cout << a[i] << endl;
+	}
+}
+
+
+
+
+数组问题，移动0到数组后。
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int n=nums.size();
+        int zeronums = 0;
+        for(int i = 0;i<n; i++)
+        {
+            zeronums += (nums[i] == 0);
+        }
+        vector<int > ans;
+        for(int i = 0; i < n; i++){
+            if (nums[i]!= 0){ans.push_back(nums[i]);}
+        }
+        while(zeronums--){
+            ans.push_back(0);
+        }
+        for (int i=0;i<n;i++){
+            nums[i] = ans[i];
+        }
+    }
+};
+
+hash表问题
+happy number给定一个数字，判断每位平方相加，重复n次，判断能否十分最终的结果为1.
+class Solution {
+public:
+    int oncesumsquire(int n){
+        int sum = 0;
+        while(n)
+        {   
+            int cash = n%10; 
+            sum += cash * cash;
+            n /= 10;
+        }
+        return sum;
+    }
+    bool isHappy(int n) {
+        int slow=n;
+        int fast=n;
+        do
+        {
+            slow = oncesumsquire(slow);
+            fast = oncesumsquire(fast);
+            fast = oncesumsquire(fast);
+        }while(slow != fast);
+        if (slow == 1){
+            return true;}
+        else
+            return false;
+    }
+};
+
+
+链表问题：*****************************************************************
+两个链表相加，给定两个链表,进位问题没看懂
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* current1 = l1;
+        ListNode* current2 = l2;
+        ListNode* res = NULL;
+        int n1 = 0;
+        int n2 = 0;
+        while(current1)
+        {
+            current1 = current1->next;
+            n1++;
+        }
+        while(current2)
+        {
+            current2 = current2->next;
+            n2++;
+        }
+        current1 = l1;current2 = l2;
+        while(n1>0&&n2>0)
+        {
+            int sum = 0;
+            if(n1>=n2){
+                sum += current1->val;
+                current1 = current1->next;
+                n1--;
+            }
+            if(n2>n1){
+                sum += current2->val;
+                current2 = current2->next;
+                n2--;
+            }
+            res = AddToFront(sum,res);
+        }
+        current1 = res; res = NULL;
+        int carry = 0;
+        while(current1){
+            current1->val += carry;
+            carry = current1->val/10;
+            //current1->value += carry;
+            res = AddToFront(current1->val%10,res);
+            current2 = current1;
+            current1 = current1->next;
+            delete current2;
+        }
+        if(carry == 1){
+            res = AddToFront(1,res);
+           
+        } return res;
+    }
+    ListNode* AddToFront(int val,ListNode* res){
+        ListNode* temp = new ListNode(val);
+        temp->next = res;
+        return temp;
+    }
+        
+};
+
+
+math问题：
+把一个数组中的数字经过m次增加，使得数组中每个数字都相等，每次增加的值总和不得超过数组长度减1.纯粹的数学问题。
+代码：
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        int n = nums.size();
+        int sum = 0;
+        int minNum = nums[0];
+        for(int i=0;i<n;i++)
+        {
+            sum += nums[i];
+            if (minNum > nums[i]){
+                minNum = nums[i];
+            }
+        }
+        return sum-minNum*n;
+    }
+};
+
+
+Two pointers，双指针问题************************
+三个数之和为零，返回二维数组
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> ans;
+        sort(nums.begin(),nums.end());
+        //vector<vector<int>> ans;
+        for(int i = 0 ;i < nums.size();i++){
+            int target = -nums[i];
+            int front = i+1;
+            int rear = nums.size() - 1;
+            //int sum = 0;
+
+            while(front < rear)
+            {
+                int sum = nums[front] + nums[rear];
+                if (sum < target){
+                    front++;
+                }
+                else if(sum > target){
+                    rear--;
+                }
+                else{
+                    vector <int> triple(3,0);
+                    triple[0] = nums[i];
+                    triple[1] = nums[front];
+                    triple[2] = nums[rear];
+                    ans.push_back(triple);
+                    while(front<rear && nums[front] == triple[1]) front++;
+                    while(front<rear && nums[rear] == triple[2]) rear--;
+                }
+            }
+            while(i+1<nums.size() && nums[i+1] == nums[i])
+                i++;
+        }
+        return ans;
+    }
+};
+
+String字符串问题，
+
+二分检索问题
+一行解决阶梯问题，其实本质上是数学问题。arranging coins
+1+2+3+...+x = n
+-> (1+x)x/2 = n
+-> x^2+x = 2n
+-> x^2+x+1/4 = 2n +1/4
+-> (x+1/2)^2 = 2n +1/4
+-> (x+0.5) = sqrt(2n+0.25)
+-> x = -0.5 + sqrt(2n+0.25)
+
+int arrangeCoins(int n) {
+return floor(-0.5+sqrt((double)2*n+0.25));
+}
+
+
+
+分治法（divide and conquer）
+beautiful arry(比较难想)
+题目描述：
+Saying that an array is beautiful,
+there is no i < k < j,
+such that A[k] * 2 = A[i] + A[j]
+题解：
+   vector<int> beautifulArray(int N) {
+        vector<int> res = {1};
+        while (res.size() < N) {
+            vector<int> tmp;
+            for (int i : res) if (i * 2 - 1 <= N) tmp.push_back(i * 2 - 1);
+            for (int i : res) if (i * 2 <= N) tmp.push_back(i * 2);
+            res = tmp;
+        }
+        return res;
+    }
+    
+    
+动态规划       Dynamic Programming
+ 2 keys keyboard
+ 质因数分解prime factorization
+ 思路：
+ 1.量化解空间，用c表示copy，p表示paste。则移动次序[cpp][cppp][cp].
+ 2.g1,g2,gn分别表示这些数组的长度
+ 3.‘A’的个数即为g1*g2*g3*...*gn个
+ 4.求最优：如果gi可分解，即可写为gi = p*q;那么就把这个数组拆分为两个数组（第一个数组有1个copy，p-1个paste。第二个数组有1个copy，q-1个paste）
+ 注意：这样分割步数最少，未分割前步数为pq，分割后步数为p+q。在p、q都大于等于2的时候，p+q <= pq 就等价于 1 <= (p-1)(q-1)
+class Solution {
+public:
+    int minSteps(int n) {
+        int stepNum = 0;
+        int d = 2;
+        while(n > 1){
+            while(n%d == 0){
+                stepNum += d;
+                n /= d;
+            }
+            d += 1;
+            
+        }
+        return stepNum;
+    }
+};
+
+
+
+
+回溯backtracking
+
+
+
+
+
+
+
+
+二维数组中的查找问题
+总结3种方法可做此题：
+1.依次遍历二维数组，查找是否存在。时间复杂度O(n^2);
+2.因为是有序的，故首先想到二分查找，可对每一行进行二分查找。此时间复杂度为O(NlgN);
+3.从二维数组的右上角开始，往回逼，此时间复杂度为O(n);
+    class Solution {
+public:
+    bool Find(int target, vector<vector<int> > array) {
+        //倒逼法解决
+        int row = array.size();
+        int column = array[0].size();
+        int i = 0;
+        int j = row - 1;
+        while(i<column && j>=0){
+            if(target > array[j][i]){
+                i++;
+            }
+            else if(target < array[j][i]){
+                j--;
+            }
+            else
+                return true;
+        }
+        return false;
+    }
+};
+
+
+
+
+替换数组中的空格为%20
+两种方法：
+1.开辟新数组，替换空格后，放入新数组。时间复杂度O(N),空间复杂度O(N)；
+2.不额外占用空间，先计算替换后的数组长度，两个指针从后往前改变原数组内容。时间复杂度O(N)。
+第二种源码：
+class Solution {
+public:
+    void replaceSpace(char *str,int length) {
+        //不开辟新数组，原数组从后往前遍历
+        //1.先计算出空格数量，以求出替换后长度
+        int BlankNum = 0;
+        int OldBlankNum ;
+        for (OldBlankNum = 0;str[OldBlankNum] != '\0';OldBlankNum++ ){
+            if(str[OldBlankNum] == ' '){BlankNum++;}
+        }
+        int newLength = length + BlankNum*2;
+        str[newLength] = '\0';
+        int pointer1=length-1,pointer2 = newLength-1;
+        while(pointer1>=0){
+            if(str[pointer1] == ' '){
+                str[pointer2--] = '0';
+                str[pointer2--] = '2';
+                str[pointer2--] = '%';
+            }
+            else
+                str[pointer2--] = str[pointer1];
+            pointer1--;
+        }
+    }
+};
+
+
+
+
+stack 
+20. Valid Parentheses括号匹配，字符串是否合法问题
+class Solution {
+public:
+    bool isValid(string s) {
+        stack <char> st;
+        for(char a : s){
+            if(a == '(' || a=='[' || a=='{'){
+                st.push(a);
+            }else{
+                if(st.empty()) return false;
+                if(st.top() != '(' && a == ')') {
+                     return false;
+                }
+                if(st.top() != '{' && a == '}') {
+                     return false;
+                }
+                if(st.top() != '[' && a == ']') {
+                     return false;
+                }
+                st.pop();
+            }
+        }
+        //return st.empty();
+        if(st.empty())
+            return true;
+        else
+            return false;
+    }
+};
+
+
+
+
+树
+965. Univalued Binary Tree
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    //先序遍历来解
+    bool PreOrderTraverse(TreeNode* root,int data){
+        if(root){
+            if(data != root->val){return false;}
+            else if(!PreOrderTraverse(root->left,data)) return false;
+            else if(!PreOrderTraverse(root->right,data)) return false;
+        }
+        return true;
+    }
+    bool isUnivalTree(TreeNode* root) {
+        int data = root->val;
+        return PreOrderTraverse(root,data);
+        
+    }
+};
+
+
+
+
+
+95. Unique Binary Search Trees II（不懂QaQ！！！！！！！！！！！！！！！）
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*>tree;
+        if(n==0){
+            return tree;
+        }
+        dfs(1,n,tree);
+        return tree;    
+    }
+private:
+    void dfs(int start,int end,vector<TreeNode*>& tree){
+        if(start>end){
+            tree.push_back(NULL);
+            return;
+        }
+        for(int i=start;i<=end;++i){
+            vector<TreeNode*>left;
+            vector<TreeNode*>right;
+            dfs(start,i-1,left);
+            dfs(i+1,end,right);
+            for(int j=0;j<left.size();++j){
+                for(int k=0;k<right.size();++k){
+                    TreeNode* root = new TreeNode(i);
+                    root->left = left[j];
+                    root->right = right[k];
+                    tree.push_back(root);
+                }
+            }
+            
+        }
+    }
+};
+
+
+
+
+2019.2.21 根据前序和中序遍历序列重构树
+
+/**
+ * Definition for binary tree
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* reConstructBinaryTree(vector<int> pre,vector<int> vin) {
+        int size = vin.size();
+        if(size == 0){
+            return NULL;
+        }
+        vector<int> pre_left,pre_right,vin_left,vin_right;
+        TreeNode *node = new TreeNode(pre[0]);
+        int p ;
+        for(p=0; p<size; p++){
+            if(vin[p] == pre[0])
+                break;
+        }
+        for(int i = 0; i<size;i++){
+            if(i<p){
+                pre_left.push_back(pre[i+1]);
+                vin_left.push_back(vin[i]);
+            }
+            if(i>p){
+                pre_right.push_back(pre[i]);
+                vin_right.push_back(vin[i]);
+            }
+        }
+        node->left = reConstructBinaryTree(pre_left,vin_left);
+        node->right = reConstructBinaryTree(pre_right,vin_right);
+        return node;
+    }
+};
+
+
+
+
+141.判断给定的链表是否有环。
+采用快慢指针
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* pointerfast = head;
+        ListNode* pointerslow = head;
+        while(pointerfast && pointerfast->next){
+            
+            pointerslow = pointerslow->next;
+            pointerfast = pointerfast->next->next;
+            if(pointerfast == pointerslow){return true;}
+        }
+        return false;
+    }
+};
+
+
+
+
+142Linked List Cycle II
+思路：
+1.快慢指针，快指针是慢指针的二倍。
+2.当相遇说明有环，修改慢指针指向head，快指针行进速度改为1，当两个指针再次相遇，该节点即为环的入口节点。
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode *fast = head;
+        ListNode *slow = head;
+        while(fast && fast->next){
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast == slow) {
+                slow = head;
+                int i = 0;
+                while(fast != slow){
+                    slow = slow->next;
+                    fast = fast->next;
+                    i++;
+                }
+                cout<<"tail connects to node index "<<i<<endl;
+                return slow;
+            }
+        }
+        
+        return NULL;
+    }
+};
+
+
+
+783. Minimum Distance Between BST Nodes(简单  不好想明白)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:   
+    int res = 100;
+    int pre =-1;
+    int minDiffInBST(TreeNode* root) {
+        if(root->left){
+            minDiffInBST(root->left);
+        }
+        if(pre >= 0){
+            res = min(res,root->val - pre);
+        }
+        pre = root->val;
+        if(root->right){
+            minDiffInBST(root->right);
+        }
+        return res;
+    }
+};
+
+
+
+
+二叉树的中序遍历
+我的代码：Runtime: 8 ms, faster than 20.88% of C++ online submissions for Binary Tree Inorder Traversal.
+Memory Usage: 11.2 MB, less than 5.11% of C++ online submissions for Binary Tree Inorder Traversal.
+
+class Solution {
+public:
+    vector<int> buf;
+    vector<int> inorderTraversal(TreeNode* root) {
+        if(root){
+            inorderTraversal(root->left);
+            buf.push_back(root->val);
+            inorderTraversal(root->right);
+        }
+        return buf;
+    }
+};
+别人的代码：Runtime: 4 ms, faster than 100.00% of C++ online submissions for Binary Tree Inorder Traversal.
+Memory Usage: 9.5 MB, less than 14.60% of C++ online submissions for Binary Tree Inorder Traversal.
+// Recursion
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode *root) {
+        vector<int> res;
+        inorder(root, res);
+        return res;
+    }
+    void inorder(TreeNode *root, vector<int> &res) {
+        if (!root) return;
+        if (root->left) inorder(root->left, res);
+        res.push_back(root->val);
+        if (root->right) inorder(root->right, res);
+    }
+};
+
+
+
+
+
+230. Kth Smallest Element in a BST
+我的代码：Runtime: 32 ms, faster than 78.34% of C++ online submissions for Kth Smallest Element in a BST.
+Memory Usage: 22.2 MB, less than 6.95% of C++ online submissions for Kth Smallest Element in a BST.
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int kthSmallest(TreeNode* root, int k) {
+        vector<int> res;
+        inOrder(root,res);
+        sort(res.begin(),res.end());
+        return res[k-1];
+    }
+    void inOrder(TreeNode* root,vector<int>& res){
+        if(!root) return;
+        if(root->left){inOrder(root->left,res);}
+        res.push_back(root->val);
+        if(root->right){inOrder(root->right,res);}
+    }
+};
+
+
+
+
+2019.2.22
+一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。求该青蛙跳上一个n级的台阶总共有多少种跳法。
+class Solution {
+public:
+    int jumpFloorII(int number) {
+       return pow(2,number-1);
+    }
+};
+
+
+我们可以用2*1的小矩形横着或者竖着去覆盖更大的矩形。请问用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+class Solution {
+public:
+    int rectCover(int number) {
+        vector<int> buf;
+        buf.push_back(1);
+        buf.push_back(2);
+        if (number == 1){
+            
+            return 1;}
+        if(number == 2){
+                        return 2;}
+        int i;
+        if(number >= 3){
+            for(i = 2;i<number;i++){
+                buf.push_back(buf[i-1]+buf[i-2]);
+            }
+            return buf[i-1];
+        }
+        else return 0;
+    }
+};
+
+
+
+
+
+输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+class Solution {
+public:
+     int  NumberOf1(int n) {
+         int index = 1;
+         int count = 0;
+         while(index != 0){
+             if((n & index) != 0){
+                 count++;
+             }
+             index = index<<1;
+         }
+         return count;
+     }
+};
+
+
+671. Second Minimum Node In a Binary Tree
+我的代码：Runtime: 4 ms, faster than 100.00% of C++ online submissions for Second Minimum Node In a Binary Tree.
+Memory Usage: 8.9 MB, less than 10.58% of C++ online submissions for Second Minimum Node In a Binary Tree.
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int findSecondMinimumValue(TreeNode* root) {
+        //中序遍历
+        vector<int> buf;
+        inOrder(root,buf);
+        sort(buf.begin(),buf.end());
+        int i;
+        for(i=1;i<buf.size();i++){
+            if(buf[i] > buf[i-1]){
+                 
+                return buf[i];
+                break;
+            }
+        }
+        return -1;
+    }
+    void inOrder(TreeNode* root,vector<int>& buf){
+        if(!root){return ;}
+        if(root){
+            inOrder(root->left,buf);
+            buf.push_back(root->val);
+            inOrder(root->right,buf);
+        }
+    }
+};
+
+
+
+703. Kth Largest Element in a Stream
+Runtime: 48 ms, faster than 100.00% of C++ online submissions for Kth Largest Element in a Stream.
+Memory Usage: 19.4 MB, less than 82.35% of C++ online submissions for Kth Largest Element in a Stream.
+class KthLargest {
+public:
+    vector<int> buf;
+    int rk = 0;
+    int heap_size = 0;
+    KthLargest(int k, vector<int> nums) {
+        rk = k;
+        buf.assign(nums.begin(),nums.end());
+        heap_size = nums.size();
+        make_heap(buf.begin(),buf.end(),greater<int>());
+        while(heap_size > k){
+            pop_heap(buf.begin(),buf.end(),greater<int>());
+            buf.pop_back();
+            heap_size--;
+        }
+    }
+    
+    int add(int val) {
+        if(heap_size < rk){
+            buf.push_back(val);
+            push_heap(buf.begin(),buf.end(),greater<int>());
+            heap_size++;
+        }
+        else if(val > buf[0]){
+            pop_heap(buf.begin(),buf.end(),greater<int>());
+            buf[rk - 1] = val;
+            push_heap(buf.begin(),buf.end(),greater<int>());
+        }
+        return buf[0];
+    }
+};
+
+
+
+215. Kth Largest Element in an Array
+我的代码：Runtime: 12 ms, faster than 99.15% of C++ online submissions for Kth Largest Element in an Array.
+Memory Usage: 9.5 MB, less than 58.61% of C++ online submissions for Kth Largest Element in an Array.
+/**
+ * Your KthLargest object will be instantiated and called as such:
+ * KthLargest obj = new KthLargest(k, nums);
+ * int param_1 = obj.add(val);
+ */
+
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        sort(nums.begin(),nums.end());
+        int siz = nums.size();
+        if(siz >= k){
+             while(k > 0){
+                 nums.pop_back();
+                 k--;
+             }
+           
+            return nums[nums.size()];
+        }
+       else return false;
+    }
+};
+
+
+
+324. Wiggle Sort II（可进行优化使用nth_element函数进行优化）
+我的代码：Runtime: 76 ms, faster than 100.00% of C++ online submissions for Wiggle Sort II.
+Memory Usage: 12.3 MB, less than 6.90% of C++ online submissions for Wiggle Sort II.
+class Solution {
+public:
+    void wiggleSort(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int size = nums.size();
+        int right ;
+        if(size %2 == 0){
+            right = size/2;
+        }
+        else
+            right = size/2 + 1; 
+        vector<int> res;
+        int i = right-1;
+        int j = size-1;
+        while(i>=0 || j>=right){
+            if(i>=0 && j<right){
+                res.push_back(nums[i]);
+                i--;
+            }
+            else{
+                res.push_back(nums[i]);
+                res.push_back(nums[j]);
+                i--;
+                j--;
+            }  
+        }
+        nums.assign(res.begin(),res.end());
+    }
+};
+
+
+
+451. Sort Characters By Frequency
+我的代码：Runtime: 28 ms, faster than 44.79% of C++ online submissions for Sort Characters By Frequency.
+Memory Usage: 18.5 MB, less than 12.74% of C++ online submissions for Sort Characters By Frequency.
+class Solution {
+public:
+    string frequencySort(string s) {
+        int len = s.size();
+        unordered_map<char,int> hash;                           //map键值对容器，unordered_map
+        vector<string> vec(len+1,"");
+        for(auto ch : s){hash[ch]++;}
+        for(auto val : hash){
+            vec[val.second].append(val.second,val.first) ;         //vec[val.second]，该字母个数越多，在vector中排的越靠后。至于.append(数字，字母)实现在“”后面加上n个字母。
+        }
+        string ans;
+        for(int i = len;i>0;i--){
+            ans += vec[i];
+        }
+        return ans;
+            
+        
+    }
+};
+
+
+2019.2.23
+
+387. First Unique Character in a String
+利用map映射的代码：Runtime: 96 ms, faster than 9.91% of C++ online submissions for First Unique Character in a String.
+Memory Usage: 13.8 MB, less than 14.53% of C++ online submissions for First Unique Character in a String.
+class Solution {
+public:
+    int firstUniqChar(string s) {
+        int len = s.size();
+        map<char,int> maps;
+        for(int i = 0; i <len;++i){
+            maps[s[i]]++;
+        }
+        for(int i = 0; i < len;++i){
+            if(maps[s[i]] == 1)
+                return i;
+        }
+        return -1;
+    }
+};
+
+
+
+166. Fraction to Recurring Decimal
+搜集代码：Runtime: 4 ms, faster than 100.00% of C++ online submissions for Fraction to Recurring Decimal.
+Memory Usage: 9 MB, less than 37.14% of C++ online submissions for Fraction to Recurring Decimal.
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        //分数的分子和分母
+        if(numerator == 0){return "0";}
+        string res;
+        if(numerator<0 ^ denominator<0){res += '-';}
+        long long int n = numerator,d = denominator;
+        n = abs(n);
+        d = abs(d);
+        res += to_string(n/d);
+        long long int r = n%d;
+        if(r == 0){return res;}
+        else{
+            res += '.';
+        }
+        map<int,int> hash;
+        while(r){
+            if(hash.find(r) != hash.end()){
+                res.insert(hash[r],1,'(');
+                res += ')';
+                break;
+            }
+            hash[r] = res.size();
+            r *= 10;
+            res += to_string(r/d);
+            r = r%d;
+            //hash[r]++;
+            //res.insert(r,res.size());
+            //res.to_string();
+        }
+        return res;
+        
+    }
+};
+
+
+
+
+687. Longest Univalue Path
+网上代码Runtime: 156 ms, faster than 69.07% of C++ online submissions for Longest Univalue Path.
+Memory Usage: 49.9 MB, less than 84.82% of C++ online submissions for Longest Univalue Path.
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int longestUnivaluePath(TreeNode* root) {
+        if(!root){return 0;}
+        int max = 0;
+        dfs(root,max);
+        return max;
+    }
+    int dfs(TreeNode *root,int &max){
+        int l = 0;
+        int r = 0;
+        if(root->left && root->left->val == root->val){
+            l = 1 + dfs(root->left,max); }
+        else if(root->left)
+            dfs(root->left,max);
+        
+        if(root->right && root->right->val == root->val){
+            r = 1 + dfs(root->right,max);
+        }
+        else if(root->right)
+            dfs(root->right,max);
+        if(l + r > max)
+            max = l + r;
+        return (l>r) ? l : r; 
+
+    }
+};
